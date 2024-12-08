@@ -1,0 +1,34 @@
+import csv
+
+# Словарь для хранения категорий покупок по user_id
+purchases = {}
+
+# Чтение файла с покупками
+with open('purchases.csv', 'r', encoding='utf-8') as purchases_file:
+    purchases_reader = csv.reader(purchases_file)
+    next(purchases_reader)  # Пропускаем заголовок
+    for row in purchases_reader:
+        user_id = row[0]
+        category = row[1]
+        purchases[user_id] = category
+
+# Открытие файла visit_log.csv и создание funnel.csv
+with open('visit_log.csv', 'r', encoding='utf-8') as visit_log_file, \
+     open('funnel.csv', 'w', encoding='utf-8', newline='') as funnel_file:
+    
+    visit_log_reader = csv.reader(visit_log_file)
+    funnel_writer = csv.writer(funnel_file)
+    
+    # Запись заголовка в funnel.csv
+    funnel_writer.writerow(['user_id', 'source', 'category'])
+    
+    next(visit_log_reader)  # Пропускаем заголовок
+    for row in visit_log_reader:
+        user_id = row[0]
+        source = row[1]
+        
+        # Проверяем, есть ли категория покупки для данного user_id
+        if user_id in purchases:
+            category = purchases[user_id]
+            # Записываем в funnel.csv
+            funnel_writer.writerow([user_id, source, category])
