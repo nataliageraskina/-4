@@ -1,0 +1,62 @@
+[
+    {
+        "Имя": "Иван",
+        "Возраст": 30,
+        "Профессия": "учитель",
+        "Город": "Санкт-Петербург"
+    },
+    {
+        "Имя": "Анна",
+        "Возраст": 25,
+        "Профессия": "инженер",
+        "Город": "Москва"
+    },
+    {
+        "Имя": "Максим",
+        "Возраст": 27,
+        "Профессия": "программист",
+        "Город": "Екатеринбург"
+    },
+    {
+        "Имя": "Ольга",
+        "Возраст": 26,
+        "Профессия": "дизайнер",
+        "Город": "Краснодар"
+    },
+    {
+        "Имя": "Елена",
+        "Возраст": 28,
+        "Профессия": "врач",
+        "Город": "Новосибирск"
+    }
+]
+
+
+import json
+import xml.etree.ElementTree as ET
+
+# Функция для конвертации JSON в XML
+def json_to_xml(json_data):
+    root = ET.Element("People")
+    
+    for person in json_data:
+        person_element = ET.SubElement(root, "Person")
+        
+        for key, value in person.items():
+            child = ET.SubElement(person_element, key)
+            child.text = str(value)
+    
+    return ET.tostring(root, encoding='unicode')
+
+# Чтение данных из JSON файла
+with open('data.json', 'r', encoding='utf-8') as json_file:
+    data = json.load(json_file)
+
+# Конвертация в XML
+xml_data = json_to_xml(data)
+
+# Запись данных в XML файл
+with open('data.xml', 'w', encoding='utf-8') as xml_file:
+    xml_file.write(xml_data)
+
+print("Конвертация завершена. Данные сохранены в data.xml.")
